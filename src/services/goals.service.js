@@ -148,7 +148,7 @@ export async function updateGoalPeriodByUserId(userId, goalIdParam, body) {
   }
 
   // 2) 소유권 체크
-  if (existing.userId !== userId) {
+  if (Number(existing.userId) !== Number(userId)) {
     const err = new Error("Forbidden");
     err.statusCode = 403;
     err.payload = {
@@ -280,7 +280,7 @@ export async function updateGoalRatioByUserId(userId, goalIdParam, body) {
     throw err;
   }
 
-  if (existing.userId !== userId) {
+  if (Number(existing.userId) !== Number(userId)) {
     const err = new Error("Forbidden");
     err.statusCode = 403;
     err.payload = {
@@ -322,7 +322,7 @@ export async function getGoalDetailByUserId(userId, goalIdParam) {
     throw err;
   }
 
-  if (goal.userId !== userId) {
+  if (Number(goal.userId) !== Number(userId)) {
     const err = new Error("Forbidden");
     err.statusCode = 403;
     err.payload = {
@@ -367,7 +367,7 @@ export async function getGoalProgressByUserId(userId, goalIdParam) {
     throw err;
   }
 
-  if (goal.userId !== userId) {
+  if (Number(goal.userId) !== Number(userId)) {
     const err = new Error("Forbidden");
     err.statusCode = 403;
     err.payload = {
@@ -506,7 +506,7 @@ export async function deleteGoalByUserId(userId, goalIdParam) {
   }
 
   // 2) 소유권 체크 (보안)
-  if (goal.userId !== userId) { //
+  if (Number(goal.userId) !== Number(userId)) { //
     const err = new Error("Forbidden");
     err.statusCode = 403;
     err.payload = {

@@ -10,11 +10,19 @@ import {
   deleteGoalByUserId,
 } from "../services/goals.service.js";
 
+function getAuthUserIdSafe(req) {
+  return req.auth?.userId ?? req.userId; 
+}
 export function registerGoalRoutes(app) {
   // POST /api/goals
   app.post("/api/goals", requireAuth, async (req, res) => {
     try {
-      const result = await createGoalPeriodByUserId(req.auth.userId, req.body);
+      const userIdRaw = getAuthUserIdSafe(req);
+      if (!userIdRaw) return res.status(401).json(defaultGoalsFail());
+      const userId = Number(userIdRaw);
+
+      const result = await createGoalPeriodByUserId(userId, req.body);
+
       return res.status(201).json(result);
     } catch (e) {
       console.error("[POST /api/goals] error:", e);
@@ -25,7 +33,11 @@ export function registerGoalRoutes(app) {
   // DELETE /api/goals/:goalId (목표 삭제)
   app.delete("/api/goals/:goalId", requireAuth, async (req, res) => { //
     try {
-      const result = await deleteGoalByUserId(req.auth.userId, req.params.goalId);
+      const userIdRaw = getAuthUserIdSafe(req);
+      if (!userIdRaw) return res.status(401).json(defaultGoalsFail());
+      const userId = Number(userIdRaw);
+
+      const result = await deleteGoalByUserId(userId, req.params.goalId);
       return res.status(200).json(result);
     } catch (e) {
       console.error("[DELETE /api/goals/:goalId] error:", e);
@@ -36,7 +48,12 @@ export function registerGoalRoutes(app) {
   // GET /api/goals/current (현재 목표 조회)
   app.get("/api/goals/current", requireAuth, async (req, res) => {
     try {
-      const result = await getCurrentGoalByUserId(req.auth.userId);
+      const userIdRaw = getAuthUserIdSafe(req);
+      if (!userIdRaw) return res.status(401).json(defaultGoalsFail());
+      const userId = Number(userIdRaw);
+
+      const result = await getCurrentGoalByUserId(userId);
+
       return res.status(200).json(result);
     } catch (e) {
       console.error("[GET /api/goals/current] error:", e);
@@ -58,7 +75,11 @@ export function registerGoalRoutes(app) {
   // GET /api/goals/:goalId/progress (진행 비율)  ← :goalId 보다 위!
   app.get("/api/goals/:goalId/progress", requireAuth, async (req, res) => {
     try {
-      const result = await getGoalProgressByUserId(req.auth.userId, req.params.goalId);
+      const userIdRaw = getAuthUserIdSafe(req);
+      if (!userIdRaw) return res.status(401).json(defaultGoalsFail());
+      const userId = Number(userIdRaw);
+
+      const result = await getGoalProgressByUserId(userId, req.params.goalId);
       return res.status(200).json(result);
     } catch (e) {
       console.error("[GET /api/goals/:goalId/progress] error:", e);
@@ -69,7 +90,11 @@ export function registerGoalRoutes(app) {
   // PATCH /api/goals/:goalId/ratio
   app.patch("/api/goals/:goalId/ratio", requireAuth, async (req, res) => {
     try {
-      const result = await updateGoalRatioByUserId(req.auth.userId, req.params.goalId, req.body);
+      const userIdRaw = getAuthUserIdSafe(req);
+      if (!userIdRaw) return res.status(401).json(defaultGoalsFail());
+      const userId = Number(userIdRaw);
+
+      const result = await updateGoalRatioByUserId(userId, req.params.goalId, req.body);
       return res.status(200).json(result);
     } catch (e) {
       console.error("[PATCH /api/goals/:goalId/ratio] error:", e);
@@ -80,7 +105,11 @@ export function registerGoalRoutes(app) {
   // PATCH /api/goals/:goalId (기간/이름 수정)
   app.patch("/api/goals/:goalId", requireAuth, async (req, res) => {
     try {
-      const result = await updateGoalPeriodByUserId(req.auth.userId, req.params.goalId, req.body);
+      const userIdRaw = getAuthUserIdSafe(req);
+      if (!userIdRaw) return res.status(401).json(defaultGoalsFail());
+      const userId = Number(userIdRaw);
+
+      const result = await updateGoalPeriodByUserId(userId, req.params.goalId, req.body);
       return res.status(200).json(result);
     } catch (e) {
       console.error("[PATCH /api/goals/:goalId] error:", e);
@@ -91,7 +120,11 @@ export function registerGoalRoutes(app) {
   // GET /api/goals/:goalId (목표 상세: 기간 + 타겟비율)
   app.get("/api/goals/:goalId", requireAuth, async (req, res) => {
     try {
-      const result = await getGoalDetailByUserId(req.auth.userId, req.params.goalId);
+      const userIdRaw = getAuthUserIdSafe(req);
+      if (!userIdRaw) return res.status(401).json(defaultGoalsFail());
+      const userId = Number(userIdRaw);
+
+      const result = await getGoalDetailByUserId(userId, req.params.goalId);
       return res.status(200).json(result);
     } catch (e) {
       console.error("[GET /api/goals/:goalId] error:", e);
